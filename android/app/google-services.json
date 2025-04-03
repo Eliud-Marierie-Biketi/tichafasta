@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "170567973902",
+    "project_id": "hallo-611ac",
+    "storage_bucket": "hallo-611ac.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:170567973902:android:6ed0b7cf9baea81d38505f",
+        "android_client_info": {
+          "package_name": "com.example.tichafasta"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5vLfP-zCxBxjHjtlBM3snnZtFO0iaax4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
