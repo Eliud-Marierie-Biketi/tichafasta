@@ -3,61 +3,41 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:tichafasta/firebase_options.dart';
-import 'package:tichafasta/pages/profile_page.dart';
+import 'package:shadcn_flutter/shadcn_flutter.dart'
+    as shadcn; // <-- Alias shadcn_flutter
+import 'package:tichafasta/components/sidebar.dart';
 
+import 'firebase_options.dart';
 import 'auth/auth_provider.dart';
 import 'auth/login_page.dart';
-import 'package:tichafasta/pages/dashboard_page.dart';
-import 'package:tichafasta/pages/reports_page.dart';
-import 'package:tichafasta/pages/settings_page.dart';
+import 'pages/profile_page.dart';
+import 'pages/dashboard_page.dart';
+import 'pages/reports_page.dart';
+import 'pages/settings_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(ProviderScope(child: MyApp()));
+  runApp(const ProviderScope(child: MyShadcnApp()));
 }
 
-class MyApp extends ConsumerWidget {
+class MyShadcnApp extends ConsumerWidget {
+  const MyShadcnApp({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Check system theme (light/dark) preference
     final brightness = MediaQuery.of(context).platformBrightness;
-    bool isDarkMode = brightness == Brightness.dark;
+    final bool isDarkMode = brightness == Brightness.dark;
 
-    return MaterialApp(
-      title: 'MarkSheet Pro',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        brightness: Brightness.light,
-        // Light theme settings
-        appBarTheme: AppBarTheme(
-          backgroundColor: Color.fromARGB(255, 40, 231, 183),
-          elevation: 7,
-        ),
-        bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          backgroundColor: Color.fromARGB(255, 40, 231, 183),
-          elevation: 7,
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.black,
-        ),
+    return shadcn.ShadcnApp(
+      title: 'Ticha Fasta',
+      theme: shadcn.ThemeData(
+        colorScheme:
+            isDarkMode
+                ? shadcn.ColorSchemes.darkZinc()
+                : shadcn.ColorSchemes.lightZinc(),
+        radius: 8.0, // Add the required radius parameter
       ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        // Dark theme settings
-        appBarTheme: AppBarTheme(
-          backgroundColor: Colors.grey[850],
-          elevation: 7,
-        ),
-        bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          backgroundColor: Colors.grey[850],
-          elevation: 7,
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.grey[400],
-        ),
-      ),
-      themeMode:
-          isDarkMode ? ThemeMode.dark : ThemeMode.light, // Choose theme mode
       home: AuthenticationWrapper(),
     );
   }
@@ -107,6 +87,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const Drawer(
+        // 👈 sidebar appears from the left
+        child: CustomSidebar(),
+      ),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 40, 231, 183),
         elevation: 7,
@@ -114,6 +98,17 @@ class _HomePageState extends State<HomePage> {
         toolbarHeight: 100,
         title: Row(
           children: [
+            Builder(
+              builder:
+                  (context) => shadcn.OutlineButton(
+                    density: shadcn.ButtonDensity.icon,
+                    onPressed: () {
+                      Scaffold.of(context).openDrawer(); // No more errors 🎯
+                    },
+                    child: const Icon(Icons.menu),
+                  ),
+            ),
+            SizedBox(width: 10),
             Image.asset('assets/trans_bg.png', height: 80),
             SizedBox(width: 10),
             Text(
